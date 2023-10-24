@@ -196,7 +196,6 @@ export default function Home() {
         setMajorPenalties(0);
     }
     
-    
     return (
         <>
             <Head>
@@ -211,7 +210,7 @@ export default function Home() {
                 <meta property="og:description" content="An accurate FTC Centerstage scoring website, that makes your life easier." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.scorer.ftcmatrix.com/" />
-                <meta property="og:image" content="https://www.scorer.ftcmatrix.com/LogoNew_TransparentBG_Black.png" />
+                <meta property="og:image" content="https://www.scorer.ftcmatrix.com/LogoNew_TransparentBG_White.png" />
                 
                 {/*SEO-specific meta tags*/}
                 <meta name="robots" content="index, follow" />
