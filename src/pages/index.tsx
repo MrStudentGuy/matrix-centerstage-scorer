@@ -200,6 +200,7 @@ export default function Home() {
     return (
         <>
             <Head>
+                <script async src="https://analytics.eu.umami.is/script.js" data-website-id="099319de-6e6b-4ff7-82b0-91fdfce5310d"></script>
                 <title>FTC Scorer | Team Matrix #20870</title>
                 <meta name="description" content="An FTC Centerstage scoring website, that makes your life easier." />
                 <meta name="keywords" content="FTC Centerstage, FTC, First Tech Challenge, FTC Matrix, Matrix, Centerstage, FTC Scorer, Centerstage Scorer" />
