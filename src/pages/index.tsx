@@ -5,7 +5,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
-import {MinusIcon, PlusIcon} from "lucide-react";
+import {InfoIcon, MinusIcon, PlusIcon} from "lucide-react";
 import { Button } from "@/components/ui/button"
 import {useEffect, useState} from "react";
 import {
@@ -17,8 +17,53 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import Head from "next/head";
+import Script from "next/script";
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover } from '@/components/ui/popover';
+import {useRouter} from "next/router";
+import {ConvertToBool} from "@/lib/utils";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { motion } from "framer-motion";
+import { useToast } from '@/components/ui/use-toast';
 
 export default function Home() {
+    const router = useRouter();
+    const { toast } = useToast();
+    
+    type QueryParamValue = string | number | boolean;
+    function updateQuery(queryName: string, queryValue?: QueryParamValue) {
+        const query = { ...router.query } as Record<string, string | string[]>;
+        
+        if (queryValue === null || queryValue === undefined) {
+            delete query[queryName];
+        } else {
+            query[queryName] = queryValue.toString();
+        }
+        
+        router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+    }
+    
+    
+    const {
+        score,
+        mosaicTeleQ,
+        droneEndQ,
+        finalStatusEndQ,
+        ppDataQ,
+        bdMatchQ,
+        bsAutoQ,
+        bdAutoQ,
+        bsTeleQ,
+        bdTeleQ,
+        bsEndQ,
+        bdEndQ,
+        parkQ,
+        setLineTeleQ,
+        minorPenaltiesQ,
+        majorPenaltiesQ,
+        penValueQ,
+        } = router.query;
+    
     const [compScore, setCompScore] = useState<number>(0);
     const [autoScore, setAutoScore] = useState<number>(0);
     const [teleScore, setTeleScore] = useState<number>(0);
@@ -151,8 +196,37 @@ export default function Home() {
     
     const ComputePenalties = () => {
         let score = (minorPenalties * 10) + (majorPenalties * 30);
-        setPenValue(score);
+        setPenValue(score / 2);
     }
+    
+    const CopyLink = () => {
+        navigator.clipboard.writeText("https://www.scorer.ftcmatrix.com" + router.asPath).then(() => {
+            toast({
+                title: "Copied! 🎉",
+                description: "The link has been added to your clipboard."
+            })
+        });
+    }
+    
+    useEffect(() => {
+        setCompScore(parseInt(score as string) || 0);
+        setPenValue(parseInt(penValueQ as string) || 0);
+        setPark(ConvertToBool(parkQ as string) || false);
+        setPpData(ppDataQ as string || "nada");
+        setBdMatch(bdMatchQ as string || "nada");
+        setBsAuto(parseInt(bsAutoQ as string) || 0);
+        setBdAuto(parseInt(bdAutoQ as string) || 0);
+        setBsTele(parseInt(bsTeleQ as string) || 0);
+        setBdTele(parseInt(bdTeleQ as string) || 0);
+        setBsEnd(parseInt(bsEndQ as string) || 0);
+        setBdEnd(parseInt(bdEndQ as string) || 0);
+        setMosaicTele(parseInt(mosaicTeleQ as string) || 0);
+        setSetLineTele(setLineTeleQ as string || "nada");
+        setDroneEnd(droneEndQ as string || "nada");
+        setFinalStatusEnd(finalStatusEndQ as string || "nada");
+        setMinorPenalties(parseInt(minorPenaltiesQ as string) || 0);
+        setMajorPenalties(parseInt(majorPenaltiesQ as string) || 0);
+    }, [router.isReady])
     
     useEffect(() => {
         ComputeAutoScore();
@@ -194,12 +268,35 @@ export default function Home() {
         setPenValue(0);
         setMinorPenalties(0);
         setMajorPenalties(0);
+        
+        const q = { ...router.query };
+        delete q.score;
+        delete q.autoScoreQ;
+        delete q.teleScoreQ;
+        delete q.endScoreQ;
+        delete q.mosaicTeleQ;
+        delete q.droneEndQ;
+        delete q.finalStatusEndQ;
+        delete q.ppDataQ;
+        delete q.bdMatchQ;
+        delete q.bsAutoQ;
+        delete q.bdAutoQ;
+        delete q.bsTeleQ;
+        delete q.bdTeleQ;
+        delete q.bsEndQ;
+        delete q.bdEndQ;
+        delete q.parkQ;
+        delete q.setLineTeleQ;
+        delete q.minorPenaltiesQ;
+        delete q.majorPenaltiesQ;
+        delete q.penValueQ;
+        router.push({ pathname: router.pathname, query: q });
     }
     
     return (
         <>
+            <Script async src={"https://analytics.eu.umami.is/script.js"} data-website-id="099319de-6e6b-4ff7-82b0-91fdfce5310d" />
             <Head>
-                <script async src="https://analytics.eu.umami.is/script.js" data-website-id="099319de-6e6b-4ff7-82b0-91fdfce5310d"></script>
                 <title>FTC Scorer | Team Matrix #20870</title>
                 <meta name="description" content="An FTC Centerstage scoring website, that makes your life easier." />
                 <meta name="keywords" content="FTC Centerstage, FTC, First Tech Challenge, FTC Matrix, Matrix, Centerstage, FTC Scorer, Centerstage Scorer" />
@@ -216,9 +313,9 @@ export default function Home() {
                 <meta name="robots" content="index, follow" />
                 <meta name="author" content="Team Matrix" />
             </Head>
-            <main>
+            <main className={"overflow-x-hidden"}>
                 <div className={"flex flex-col mt-6 mb-12 space-y-5 justify-center items-center"}>
-                    <h1 className={"font-black text-xl"}>FTC Centerstage 2023-2024 Scorer</h1>
+                    <h1 className={"font-bold text-xl"}>FTC Centerstage 2023-2024 Scorer</h1>
                     <div className={"flex flex-col space-y-2 justify-center items-center"}>
                         <Card className={"w-72"}>
                             <CardHeader>
@@ -230,19 +327,52 @@ export default function Home() {
                                     <h1>Tele-Op: <b>{teleScore}</b></h1>
                                     <h1>Endgame: <b>{endScore}</b></h1>
                                     <h1>Pre-Penalty Total: <b>{autoScore + teleScore + endScore}</b></h1>
-                                    <h1 className={"text-red-500"}>Penalties: <b>{penValue > 0 && "-"}{penValue}</b></h1>
+                                    <div className={"flex flex-row items-center"}>
+                                        <h1 className={"text-red-500"}>Penalties: <b>{penValue > 0 && "-"}{penValue / 2}</b></h1>
+                                        
+                                        <Popover>
+                                            <PopoverTrigger className={"ml-1 flex justify-center items-center"}><InfoIcon className={"w-4 h-4"} /></PopoverTrigger>
+                                            <PopoverContent>Given that this tool is to score one team and not an alliance, the penalties are halved to reflect that.</PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </div>
                             </CardContent>
-                            <CardFooter>
+                            <CardFooter className={"flex flex-row justify-between"}>
                                 <h1>Your Score: <b>{compScore}</b></h1>
                                 <br />
                             </CardFooter>
                         </Card>
                         
+                        <Dialog>
+                            <DialogTrigger>
+                                <motion.div
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scaleX: 0.9 }}
+                                    className={"w-72 bg-black text-white p-1 rounded-lg"}>
+                                    Share
+                                </motion.div>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Get A Shareable Link of Your Score</DialogTitle>
+                                    <DialogDescription >
+                                        <div className={"flex flex-row"}>
+                                            <Input className={"truncate ..."} contentEditable={false} value={"https://www.scorer.ftcmatrix.com" + router.asPath} />
+                                            <Button className={"ml-1"} onClick={CopyLink}>Copy</Button>
+                                        </div>
+                                    </DialogDescription>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                         
                         <AlertDialog>
-                            <AlertDialogTrigger className={"w-72 bg-red-500 text-white rounded p-1"}>
-                                Clear
+                            <AlertDialogTrigger>
+                                <motion.div
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scaleX: 0.9 }}
+                                    className={"w-72 bg-red-500 text-white p-1 rounded-lg"}>
+                                    Clear
+                                </motion.div>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -270,7 +400,7 @@ export default function Home() {
                                         <div className={"flex flex-col space-y-2"}>
                                             {/*Robot Parked*/}
                                             <div className="items-top flex space-x-2">
-                                                <Checkbox id="park" checked={park} onClick={() => {setPark(!park)}}/>
+                                                <Checkbox id="park" checked={park} onClick={() => {setPark(!park); updateQuery("parkQ", !park)}}/>
                                                 <div className="grid gap-1.5 leading-none">
                                                     <label
                                                         htmlFor="park"
@@ -285,7 +415,7 @@ export default function Home() {
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <Label>Purple Pixel</Label>
                                                 
-                                                <Select value={ppData} onValueChange={e => {setPpData(e)}}>
+                                                <Select value={ppData} onValueChange={e => {setPpData(e); updateQuery("ppDataQ", e)}}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Choose..." />
                                                     </SelectTrigger>
@@ -301,7 +431,7 @@ export default function Home() {
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <Label>Backdrop Pixel Indication</Label>
                                                 
-                                                <Select value={bdMatch} onValueChange={e => {setBdMatch(e)}}>
+                                                <Select value={bdMatch} onValueChange={e => {setBdMatch(e); updateQuery("bdMatchQ", e)}}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Choose..." />
                                                     </SelectTrigger>
@@ -318,11 +448,11 @@ export default function Home() {
                                                 <Label htmlFor="bs-auto">Backstage Pixels</Label>
                                                 
                                                 <div className={"flex flex-row space-x-1.5"}>
-                                                    <Button onClick={() => {bsAuto > 0 && setBsAuto(bsAuto - 1);}}>
+                                                    <Button onClick={() => {bsAuto > 0 && setBsAuto(bsAuto - 1); bsAuto > 0 && updateQuery("bsAutoQ", bsAuto - 1)}}>
                                                         <MinusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                     <Input id="bs-auto" type="number" value={bsAuto} defaultValue={0} min={0} />
-                                                    <Button onClick={() => {setBsAuto(bsAuto + 1);}}>
+                                                    <Button onClick={() => {setBsAuto(bsAuto + 1); updateQuery("bsAutoQ", bsAuto + 1);}}>
                                                         <PlusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                 </div>
@@ -333,11 +463,11 @@ export default function Home() {
                                                 <Label htmlFor="bd-auto">Backdrop Pixels</Label>
                                                 
                                                 <div className={"flex flex-row space-x-1.5"}>
-                                                    <Button onClick={() => {bdAuto > 0 && setBdAuto(bdAuto - 1);}}>
+                                                    <Button onClick={() => {bdAuto > 0 && setBdAuto(bdAuto - 1); bdAuto > 0 && updateQuery("bdAutoQ", bdAuto - 1)}}>
                                                         <MinusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                     <Input id="bd-auto" type="number" value={bdAuto} defaultValue={0} min={0} />
-                                                    <Button onClick={() => {setBdAuto(bdAuto + 1);}}>
+                                                    <Button onClick={() => {setBdAuto(bdAuto + 1); updateQuery("bdAutoQ", bdAuto + 1)}}>
                                                         <PlusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                 </div>
@@ -355,11 +485,11 @@ export default function Home() {
                                                 <Label htmlFor="bs-tele">Backstage Pixels</Label>
                                                 
                                                 <div className={"flex flex-row space-x-1.5"}>
-                                                    <Button onClick={() => {bsTele > 0 && setBsTele(bsTele - 1);}}>
+                                                    <Button onClick={() => {bsTele > 0 && setBsTele(bsTele - 1); bsTele > 0 && updateQuery("bsTeleQ", bsTele - 1)}}>
                                                         <MinusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                     <Input id="bs-auto" type="number" value={bsTele} defaultValue={0} min={0} />
-                                                    <Button onClick={() => {setBsTele(bsTele + 1);}}>
+                                                    <Button onClick={() => {setBsTele(bsTele + 1); updateQuery("bsTeleQ", bsTele + 1)}}>
                                                         <PlusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                 </div>
@@ -370,11 +500,11 @@ export default function Home() {
                                                 <Label htmlFor="bd-tele">Backdrop Pixels</Label>
                                                 
                                                 <div className={"flex flex-row space-x-1.5"}>
-                                                    <Button onClick={() => {bdTele > 0 && setBdTele(bdTele - 1);}}>
+                                                    <Button onClick={() => {bdTele > 0 && setBdTele(bdTele - 1); bdTele > 0 && updateQuery("bdTeleQ", bdTele - 1)}}>
                                                         <MinusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                     <Input id="bd-tele" type="number" value={bdTele} defaultValue={0} min={0} />
-                                                    <Button onClick={() => {setBdTele(bdTele + 1);}}>
+                                                    <Button onClick={() => {setBdTele(bdTele + 1); updateQuery("bdTeleQ", bdTele + 1)}}>
                                                         <PlusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                 </div>
@@ -385,11 +515,11 @@ export default function Home() {
                                                 <Label htmlFor="mosaic-tele">Mosaic Count</Label>
                                                 
                                                 <div className={"flex flex-row space-x-1.5"}>
-                                                    <Button onClick={() => {mosaicTele > 0 && setMosaicTele(mosaicTele - 1);}}>
+                                                    <Button onClick={() => {mosaicTele > 0 && setMosaicTele(mosaicTele - 1); mosaicTele > 0 && updateQuery("mosaicTeleQ", mosaicTele - 1)}}>
                                                         <MinusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                     <Input id="mosaic-tele" type="number" value={mosaicTele} defaultValue={0} min={0} />
-                                                    <Button onClick={() => {setMosaicTele(mosaicTele + 1);}}>
+                                                    <Button onClick={() => {setMosaicTele(mosaicTele + 1); updateQuery("mosaicTeleQ", mosaicTele + 1)}}>
                                                         <PlusIcon className={"w-4 h-4"} />
                                                     </Button>
                                                 </div>
@@ -399,7 +529,7 @@ export default function Home() {
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <Label>Set Line Crossed</Label>
                                                 
-                                                <Select value={setLineTele} onValueChange={e => {setSetLineTele(e)}}>
+                                                <Select value={setLineTele} onValueChange={e => {setSetLineTele(e); updateQuery("setLineTeleQ", e)}}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Choose..." />
                                                     </SelectTrigger>
@@ -423,11 +553,11 @@ export default function Home() {
                                             <Label htmlFor="bs-end">Backstage Pixels</Label>
                                             
                                             <div className={"flex flex-row space-x-1.5"}>
-                                                <Button onClick={() => {bsEnd > 0 && setBsEnd(bsEnd - 1);}}>
+                                                <Button onClick={() => {bsEnd > 0 && setBsEnd(bsEnd - 1); bsEnd > 0 && updateQuery("bsEndQ", bsEnd - 1)}}>
                                                     <MinusIcon className={"w-4 h-4"} />
                                                 </Button>
                                                 <Input id="bs-end" type="number" value={bsEnd} defaultValue={0} min={0} />
-                                                <Button onClick={() => {setBsEnd(bsEnd + 1);}}>
+                                                <Button onClick={() => {setBsEnd(bsEnd + 1); updateQuery("bsEndQ", bsEnd + 1)}}>
                                                     <PlusIcon className={"w-4 h-4"} />
                                                 </Button>
                                             </div>
@@ -438,11 +568,11 @@ export default function Home() {
                                             <Label htmlFor="bd-end">Backdrop Pixels</Label>
                                             
                                             <div className={"flex flex-row space-x-1.5"}>
-                                                <Button onClick={() => {bdEnd > 0 && setBdEnd(bdEnd - 1);}}>
+                                                <Button onClick={() => {bdEnd > 0 && setBdEnd(bdEnd - 1); bdEnd > 0 && updateQuery("bdEndQ", bdEnd - 1)}}>
                                                     <MinusIcon className={"w-4 h-4"} />
                                                 </Button>
                                                 <Input id="bd-end" type="number" value={bdEnd} defaultValue={0} min={0} />
-                                                <Button onClick={() => {setBdEnd(bdEnd + 1);}}>
+                                                <Button onClick={() => {setBdEnd(bdEnd + 1); updateQuery("bdEndQ", bdEnd + 1)}}>
                                                     <PlusIcon className={"w-4 h-4"} />
                                                 </Button>
                                             </div>
@@ -452,7 +582,7 @@ export default function Home() {
                                         <div className="grid w-full max-w-sm items-center gap-1.5 mb-2">
                                             <Label>Drone Landing Zone</Label>
                                             
-                                            <Select value={droneEnd} onValueChange={e => {setDroneEnd(e)}}>
+                                            <Select value={droneEnd} onValueChange={e => {setDroneEnd(e); updateQuery("droneEndQ", e)}}>
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Choose..." />
                                                 </SelectTrigger>
@@ -469,7 +599,7 @@ export default function Home() {
                                         <div className="grid w-full max-w-sm items-center gap-1.5 mb-2">
                                             <Label>Robot Parked or Suspended</Label>
                                             
-                                            <Select value={finalStatusEnd} onValueChange={e => {setFinalStatusEnd(e)}}>
+                                            <Select value={finalStatusEnd} onValueChange={e => {setFinalStatusEnd(e); updateQuery("finalStatusEndQ", e);}}>
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Choose..." />
                                                 </SelectTrigger>
@@ -487,30 +617,30 @@ export default function Home() {
                                     <AccordionTrigger>Penalties</AccordionTrigger>
                                     <AccordionContent>
                                         {/*Minor Penalties*/}
-                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                        <div className="grid w-full max-w-sm items-center gap-1.5 mb-2">
                                             <Label htmlFor="minp">Minor Penalties</Label>
                                             
                                             <div className={"flex flex-row space-x-1.5"}>
-                                                <Button onClick={() => {minorPenalties > 0 && setMinorPenalties(minorPenalties - 1);}}>
+                                                <Button onClick={() => {minorPenalties > 0 && setMinorPenalties(minorPenalties - 1); minorPenalties > 0 && updateQuery("minorPenaltiesQ", minorPenalties - 1)}}>
                                                     <MinusIcon className={"w-4 h-4"} />
                                                 </Button>
                                                 <Input id="minp" type="number" value={minorPenalties} defaultValue={0} min={0} />
-                                                <Button onClick={() => {setMinorPenalties(minorPenalties + 1);}}>
+                                                <Button onClick={() => {setMinorPenalties(minorPenalties + 1); updateQuery("minorPenaltiesQ", minorPenalties + 1)}}>
                                                     <PlusIcon className={"w-4 h-4"} />
                                                 </Button>
                                             </div>
                                         </div>
                                         
                                         {/*Major Penalties*/}
-                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                        <div className="grid w-full max-w-sm items-center gap-1.5 mb-2">
                                             <Label htmlFor="majp">Major Penalties</Label>
                                             
                                             <div className={"flex flex-row space-x-1.5"}>
-                                                <Button onClick={() => {majorPenalties > 0 && setMajorPenalties(majorPenalties - 1);}}>
+                                                <Button onClick={() => {majorPenalties > 0 && setMajorPenalties(majorPenalties - 1); majorPenalties > 0 && updateQuery("majorPenaltiesQ", majorPenalties - 1)}}>
                                                     <MinusIcon className={"w-4 h-4"} />
                                                 </Button>
                                                 <Input id="majp" type="number" value={majorPenalties} defaultValue={0} min={0} />
-                                                <Button onClick={() => {setMajorPenalties(majorPenalties + 1);}}>
+                                                <Button onClick={() => {setMajorPenalties(majorPenalties + 1); updateQuery("majorPenaltiesQ", majorPenalties + 1)}}>
                                                     <PlusIcon className={"w-4 h-4"} />
                                                 </Button>
                                             </div>
@@ -522,9 +652,29 @@ export default function Home() {
                     </div>
                 </div>
                 
+                <div className={"flex flex-row items-center w-screen justify-center space-x-1.5"}>
+                    <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scaleX: 0.9 }}
+                    >
+                        <a href={"https://www.instagram.com/ftcmatrix"} target={"_blank"}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="none" stroke-width="1.5" viewBox="0 0 24 24" color="#000000"><path stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path><path stroke="#000000" stroke-width="1.5" d="M3 16V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z"></path><path stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="m17.5 6.51.01-.011"></path></svg>
+                        </a>
+                    </motion.div>
+                    
+                    <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scaleX: 0.9 }}
+                    >
+                        <a href={"mailto:ftcmatrix2021@gmail.com"} target={"_blank"}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="none" stroke-width="1.5" viewBox="0 0 24 24" color="#000000"><path stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="m7 9 5 3.5L17 9"></path><path stroke="#000000" stroke-width="1.5" d="M2 17V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"></path></svg>
+                        </a>
+                    </motion.div>
+                </div>
+                
                 <div className={"flex flex-col items-center pb-4"}>
                     <div className={"flex p-2 space-x-8 flex-row justify-center items-center"}>
-                        <Image src={"/LogoNew_TransparentBG_Black.png"} width={165 / 2} height={152 / 2} alt={"FTC Team Matrix Logo"} />
+                        <Image src={"/LogoNew_TransparentBG_Black.png"} width={165 / 1.5} height={152 / 1.5} alt={"FTC Team Matrix Logo"} />
                         <Image src={"/centerstage.png"} width={355 / 2} height={147 / 2} alt={"FTC Centerstage Logo"} />
                     </div>
                     
