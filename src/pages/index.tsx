@@ -307,7 +307,7 @@ export default function Home() {
                 <meta property="og:description" content="Discover the ultimate FTC Robotics Scorer by Team Matrix, setting new standards for precision and efficiency in the world of competitive robotics. Our cutting-edge solution is designed to empower your team in FIRST Tech Challenge (FTC) competitions like never before. With Team Matrix's FTC Robotics Scorer, you'll experience game-changing accuracy, speed, and reliability. Whether you're aiming for precise mineral placement, optimal stacking, or seamless autonomous routines, our scorer is your winning companion. It's equipped with advanced sensors, intelligent algorithms, and a user-friendly interface that simplifies scoring tasks and strategy planning." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.scorer.ftcmatrix.com/" />
-                <meta property="og:image" content="https://www.scorer.ftcmatrix.com/LogoNew_BlackBG.pngs" />
+                <meta property="og:image" content="https://www.scorer.ftcmatrix.com/LogoNew_BlackBG.png" />
                 
                 {/*SEO-specific meta tags*/}
                 <meta name="robots" content="index, follow" />
