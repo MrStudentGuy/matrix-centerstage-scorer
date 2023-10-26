@@ -304,7 +304,7 @@ export default function Home() {
                             
                 {/*Open Graph (OG) tags for social media sharing*/}
                 <meta property="og:title" content="FTC Centerstage Scorer | Team Matrix #20870" />
-                <meta property="og:description" content="An accurate FTC Centerstage scoring website, that makes your life easier." />
+                <meta property="og:description" content="Discover the ultimate FTC Robotics Scorer by Team Matrix, setting new standards for precision and efficiency in the world of competitive robotics. Our cutting-edge solution is designed to empower your team in FIRST Tech Challenge (FTC) competitions like never before. With Team Matrix's FTC Robotics Scorer, you'll experience game-changing accuracy, speed, and reliability. Whether you're aiming for precise mineral placement, optimal stacking, or seamless autonomous routines, our scorer is your winning companion. It's equipped with advanced sensors, intelligent algorithms, and a user-friendly interface that simplifies scoring tasks and strategy planning." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.scorer.ftcmatrix.com/" />
                 <meta property="og:image" content="https://www.scorer.ftcmatrix.com/LogoNew_TransparentBG_White.png" />
@@ -678,7 +678,7 @@ export default function Home() {
                         <Image src={"/centerstage.png"} width={355 / 2} height={147 / 2} alt={"FTC Centerstage Logo"} />
                     </div>
                     
-                    <h1 className={"text-center"}>Provided for public use by <a href={"https://ftcmatrix.com"} target={"_blank"} className={" text-blue-500 underline hover:cursor-pointer"}>Team Matrix #20870</a>. Centerstage logo provided by FIRST.</h1>
+                    <h1 className={"text-center"}>Provided for public use by <a href={"https://ftcmatrix.com"} target={"_blank"} className={" text-blue-500 underline hover:cursor-pointer"}>Team Matrix #20870</a>. Centerstage logo provided by FIRST. <br /> We are not affiliated with and do not represent FIRST, or FIRST Tech Challenge (FTC).</h1>
                 </div>
             </main>
         </>
