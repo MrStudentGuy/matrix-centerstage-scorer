@@ -98,7 +98,7 @@ export default function Home() {
     const [penValue, setPenValue] = useState<number>(0);
     
     const ComputeScore = () => {
-        setCompScore((autoScore + teleScore + endScore) - penValue);
+        setCompScore((autoScore + teleScore + endScore) - (penValue / 2));
     }
     
     const ComputeAutoScore = () => {
@@ -684,3 +684,8 @@ export default function Home() {
         </>
     )
 }
+
+//Only backdrop pixel in auto backdrop indication
+// yellow pixel in auto (score on qr code: 20, normal score: 10, no score)
+// purple pixel in auto ONLY WITH LINE
+// dont halve penalties
