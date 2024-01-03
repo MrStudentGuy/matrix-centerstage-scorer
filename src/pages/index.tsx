@@ -98,7 +98,7 @@ export default function Home() {
     const [penValue, setPenValue] = useState<number>(0);
     
     const ComputeScore = () => {
-        setCompScore((autoScore + teleScore + endScore) - (penValue / 2));
+        setCompScore((autoScore + teleScore + endScore) - (penValue));
     }
     
     const ComputeAutoScore = () => {
@@ -196,7 +196,7 @@ export default function Home() {
     
     const ComputePenalties = () => {
         let score = (minorPenalties * 10) + (majorPenalties * 30);
-        setPenValue(score / 2);
+        setPenValue(score);
     }
     
     const CopyLink = () => {
@@ -328,12 +328,12 @@ export default function Home() {
                                     <h1>Endgame: <b>{endScore}</b></h1>
                                     <h1>Pre-Penalty Total: <b>{autoScore + teleScore + endScore}</b></h1>
                                     <div className={"flex flex-row items-center"}>
-                                        <h1 className={"text-red-500"}>Penalties: <b>{penValue > 0 && "-"}{penValue / 2}</b></h1>
+                                        <h1 className={"text-red-500"}>Penalties: <b>{penValue > 0 && "-"}{penValue}</b></h1>
                                         
-                                        <Popover>
-                                            <PopoverTrigger className={"ml-1 flex justify-center items-center"}><InfoIcon className={"w-4 h-4"} /></PopoverTrigger>
-                                            <PopoverContent>Given that this tool is to score one team and not an alliance, the penalties are halved to reflect that.</PopoverContent>
-                                        </Popover>
+                                        {/*<Popover>*/}
+                                        {/*    <PopoverTrigger className={"ml-1 flex justify-center items-center"}><InfoIcon className={"w-4 h-4"} /></PopoverTrigger>*/}
+                                        {/*    <PopoverContent>Given that this tool is to score one team and not an alliance, the penalties are halved to reflect that.</PopoverContent>*/}
+                                        {/*</Popover>*/}
                                     </div>
                                 </div>
                             </CardContent>
@@ -387,7 +387,6 @@ export default function Home() {
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
-                    
                     </div>
                     
                     <div className={"flex justify-center items-center"}>
@@ -420,7 +419,7 @@ export default function Home() {
                                                         <SelectValue placeholder="Choose..." />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="noprop">Purple Pixel</SelectItem>
+                                                        <SelectItem value="noprop">Purple Pixel + White Pixel</SelectItem>
                                                         <SelectItem value="prop">Purple Pixel + Team Prop</SelectItem>
                                                         <SelectItem value="nada">No Purple Pixel</SelectItem>
                                                     </SelectContent>
@@ -436,8 +435,8 @@ export default function Home() {
                                                         <SelectValue placeholder="Choose..." />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="bdPixSpike">Backdrop Pixel with Spike Mark</SelectItem>
-                                                        <SelectItem value="bdPixTeamProp">Backdrop Pixel with Team Prop</SelectItem>
+                                                        <SelectItem value="bdPixSpike">Backdrop Pixel + White Pixel</SelectItem>
+                                                        <SelectItem value="bdPixTeamProp">Backdrop Pixel + Team Prop</SelectItem>
                                                         <SelectItem value="nada">No Match</SelectItem>
                                                     </SelectContent>
                                                 </Select>
@@ -684,8 +683,3 @@ export default function Home() {
         </>
     )
 }
-
-//Only backdrop pixel in auto backdrop indication
-// yellow pixel in auto (score on qr code: 20, normal score: 10, no score)
-// purple pixel in auto ONLY WITH LINE
-// dont halve penalties
