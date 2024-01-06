@@ -5,7 +5,7 @@
     "scope": "/",
     "start_url": "/",
     "name": "FTC Centerstage Scorer",
-    "short_name": "Centerstage Scorer",
+    "short_name": "Scorer",
     "icons": [
         {
             "src": "/icon-192x192.png",
