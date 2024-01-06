@@ -343,27 +343,27 @@ export default function Home() {
                             </CardFooter>
                         </Card>
                         
-                        <Dialog>
-                            <DialogTrigger>
-                                <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scaleX: 0.9 }}
-                                    className={"w-72 bg-black text-white p-1 rounded-lg"}>
-                                    Share
-                                </motion.div>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Get A Shareable Link of Your Score</DialogTitle>
-                                    <DialogDescription >
-                                        <div className={"flex flex-row"}>
-                                            <Input className={"truncate ..."} contentEditable={false} value={"https://www.scorer.ftcmatrix.com" + router.asPath} />
-                                            <Button className={"ml-1"} onClick={CopyLink}>Copy</Button>
-                                        </div>
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
+                        {/*<Dialog>*/}
+                        {/*    <DialogTrigger>*/}
+                        {/*        <motion.div*/}
+                        {/*            whileHover={{ scale: 1.1 }}*/}
+                        {/*            whileTap={{ scaleX: 0.9 }}*/}
+                        {/*            className={"w-72 bg-black text-white p-1 rounded-lg"}>*/}
+                        {/*            Share*/}
+                        {/*        </motion.div>*/}
+                        {/*    </DialogTrigger>*/}
+                        {/*    <DialogContent>*/}
+                        {/*        <DialogHeader>*/}
+                        {/*            <DialogTitle>Get A Shareable Link of Your Score</DialogTitle>*/}
+                        {/*            <DialogDescription >*/}
+                        {/*                <div className={"flex flex-row"}>*/}
+                        {/*                    <Input className={"truncate ..."} contentEditable={false} value={"https://www.scorer.ftcmatrix.com" + router.asPath} />*/}
+                        {/*                    <Button className={"ml-1"} onClick={CopyLink}>Copy</Button>*/}
+                        {/*                </div>*/}
+                        {/*            </DialogDescription>*/}
+                        {/*        </DialogHeader>*/}
+                        {/*    </DialogContent>*/}
+                        {/*</Dialog>*/}
                         
                         <AlertDialog>
                             <AlertDialogTrigger>
