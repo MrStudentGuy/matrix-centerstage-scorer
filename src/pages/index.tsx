@@ -5,9 +5,9 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
-import {InfoIcon, MinusIcon, PlusIcon} from "lucide-react";
+import {MinusIcon, PlusIcon} from "lucide-react";
 import { Button } from "@/components/ui/button"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription,
@@ -18,13 +18,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import Head from "next/head";
 import Script from "next/script";
-import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Popover } from '@/components/ui/popover';
 import {useRouter} from "next/router";
 import {ConvertToBool} from "@/lib/utils";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { motion } from "framer-motion";
 import { useToast } from '@/components/ui/use-toast';
+import Link from "next/link";
 
 export default function Home() {
     const router = useRouter();
@@ -96,6 +95,8 @@ export default function Home() {
     
     // the value of penalties
     const [penValue, setPenValue] = useState<number>(0);
+    
+    const [isPWA, setIsPWA] = useState<boolean>(false);
     
     const ComputeScore = () => {
         setCompScore((autoScore + teleScore + endScore) - (penValue));
@@ -199,14 +200,9 @@ export default function Home() {
         setPenValue(score);
     }
     
-    const CopyLink = () => {
-        navigator.clipboard.writeText("https://www.scorer.ftcmatrix.com" + router.asPath).then(() => {
-            toast({
-                title: "Copied! 🎉",
-                description: "The link has been added to your clipboard."
-            })
-        });
-    }
+    useEffect(() => {
+        setIsPWA(window.matchMedia('(display-mode: standalone)').matches);
+    }, [])
     
     useEffect(() => {
         setCompScore(parseInt(score as string) || 0);
@@ -343,33 +339,89 @@ export default function Home() {
                             </CardFooter>
                         </Card>
                         
-                        {/*<Dialog>*/}
-                        {/*    <DialogTrigger>*/}
-                        {/*        <motion.div*/}
-                        {/*            whileHover={{ scale: 1.1 }}*/}
-                        {/*            whileTap={{ scaleX: 0.9 }}*/}
-                        {/*            className={"w-72 bg-black text-white p-1 rounded-lg"}>*/}
-                        {/*            Share*/}
-                        {/*        </motion.div>*/}
-                        {/*    </DialogTrigger>*/}
-                        {/*    <DialogContent>*/}
-                        {/*        <DialogHeader>*/}
-                        {/*            <DialogTitle>Get A Shareable Link of Your Score</DialogTitle>*/}
-                        {/*            <DialogDescription >*/}
-                        {/*                <div className={"flex flex-row"}>*/}
-                        {/*                    <Input className={"truncate ..."} contentEditable={false} value={"https://www.scorer.ftcmatrix.com" + router.asPath} />*/}
-                        {/*                    <Button className={"ml-1"} onClick={CopyLink}>Copy</Button>*/}
-                        {/*                </div>*/}
-                        {/*            </DialogDescription>*/}
-                        {/*        </DialogHeader>*/}
-                        {/*    </DialogContent>*/}
-                        {/*</Dialog>*/}
+                        {!isPWA && (
+                            <Dialog>
+                                <DialogTrigger>
+                                    <motion.div
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scaleX: 0.9 }}
+                                        className={"w-72 bg-black text-white p-1 rounded-lg"}>
+                                        Install App
+                                    </motion.div>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Install App</DialogTitle>
+                                        <DialogDescription>
+                                            <h1>This app is available as a PWA. A Progressive Web App (PWA) is an app built for the web that provides an experience similar to a mobile app. It provides the same functionalities as a website, but with more conveniences such as being on your homescreen, and offline support.</h1>
+                                            <br />
+                                            <h1>Open the appropriate section to learn how to install this PWA on your browser.</h1>
+                                            
+                                            <div className={"flex flex-col space-y-2"}>
+                                                <Accordion type="single" collapsible>
+                                                    {/*Auto*/}
+                                                    <AccordionItem value="item-1">
+                                                        <AccordionTrigger>Google Chrome (All
+                                                            platforms)</AccordionTrigger>
+                                                        <AccordionContent>
+                                                            <Link className={"text-blue-600 underline font-bold"}
+                                                                  target={"_blank"} rel={"noreferrer"}
+                                                                  href={"https://support.google.com/chrome/answer/9658361?hl=en&co=GENIE.Platform%3DDesktop"}>
+                                                                Click here for instructions.
+                                                            </Link>
+                                                        </AccordionContent>
+                                                    </AccordionItem>
+                                                    {/*Tele-Op*/}
+                                                    <AccordionItem value="item-2">
+                                                        <AccordionTrigger>Safari (iOS)</AccordionTrigger>
+                                                        <AccordionContent>
+                                                            <h1 className={"font-bold"}>
+                                                                Follow the steps to install a PWA on iOS devices:
+                                                            </h1>
+                                                            
+                                                            <ol className={"list-decimal list-inside"}>
+                                                                <li>
+                                                                    Tap the Share icon on the bottom toolbar.
+                                                                </li>
+                                                                
+                                                                <li>Select &quot;Add to Home Screen&quot; from the
+                                                                    options
+                                                                </li>
+                                                                
+                                                                <li>
+                                                                    Confirm the installation by tapping
+                                                                    the &quot;Add&quot; button.
+                                                                </li>
+                                                            
+                                                            </ol>
+                                                        </AccordionContent>
+                                                    </AccordionItem>
+                                                    {/*End*/}
+                                                    <AccordionItem value="item-3">
+                                                        <AccordionTrigger>Other</AccordionTrigger>
+                                                        <AccordionContent>
+                                                            <h1 className={"font-bold"}>If the other sections do not
+                                                                apply to you, you can refer
+                                                                to <Link className={"text-blue-600 underline"}
+                                                                         target={"_blank"} rel={"noreferrer"}
+                                                                         href={"https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing#installing_and_uninstalling_pwas"}>this
+                                                                    link.</Link></h1>
+                                                        </AccordionContent>
+                                                    </AccordionItem>
+                                                </Accordion>
+                                            </div>
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        
                         
                         <AlertDialog>
                             <AlertDialogTrigger>
                                 <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scaleX: 0.9 }}
+                                    whileHover={{scale: 1.1}}
+                                    whileTap={{scaleX: 0.9}}
                                     className={"w-72 bg-red-500 text-white p-1 rounded-lg"}>
                                     Clear
                                 </motion.div>
@@ -378,7 +430,8 @@ export default function Home() {
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This data is unrecoverable. <b className={"text-red-600 font-bold"}>There is no undo-ing this.</b>
+                                        This data is unrecoverable. <b className={"text-red-600 font-bold"}>There is no
+                                        undo-ing this.</b>
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -394,12 +447,15 @@ export default function Home() {
                             <Accordion type="single" collapsible>
                                 {/*Auto*/}
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger>Autonomous</AccordionTrigger>
+                                    <AccordionTrigger>Google Chrome</AccordionTrigger>
                                     <AccordionContent>
                                         <div className={"flex flex-col space-y-2"}>
                                             {/*Robot Parked*/}
                                             <div className="items-top flex space-x-2">
-                                                <Checkbox id="park" checked={park} onClick={() => {setPark(!park); updateQuery("parkQ", !park)}}/>
+                                                <Checkbox id="park" checked={park} onClick={() => {
+                                                    setPark(!park);
+                                                    updateQuery("parkQ", !park)
+                                                }}/>
                                                 <div className="grid gap-1.5 leading-none">
                                                     <label
                                                         htmlFor="park"
