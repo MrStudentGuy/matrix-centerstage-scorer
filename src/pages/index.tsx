@@ -27,7 +27,7 @@ import Link from "next/link";
 
 export default function Home() {
     const router = useRouter();
-    const { toast } = useToast();
+    // const { toast } = useToast();
     
     type QueryParamValue = string | number | boolean;
     function updateQuery(queryName: string, queryValue?: QueryParamValue) {
@@ -447,7 +447,7 @@ export default function Home() {
                             <Accordion type="single" collapsible>
                                 {/*Auto*/}
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger>Google Chrome</AccordionTrigger>
+                                    <AccordionTrigger>Autonomous</AccordionTrigger>
                                     <AccordionContent>
                                         <div className={"flex flex-col space-y-2"}>
                                             {/*Robot Parked*/}
